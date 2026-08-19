@@ -1,39 +1,36 @@
-# Mapping tables
+# RUNBOOKS
 
-One CSV per mapping. These files are the migration's decision record: if a
-source value is not in here with `status=approved`, the load refuses to run.
+Operational procedures for the Capital Nutrition ERP production and cutover domain.
 
-## Columns
+Spec: `docs/specs/14_PRODUCTION_CUTOVER.md` (task prefix `OPS-###`)
 
-| Column | Meaning |
+| Runbook | Covers | Read it when |
+|---|---|---|
+| `BACKUP_RESTORE.md` | OPS-010 … OPS-022 | Setting up backups; restoring; running a restore drill |
+| `MONITORING.md` | OPS-030 … OPS-032 | Configuring alerts; responding to one |
+| `PARALLEL_RUN.md` | OPS-050 … OPS-052 | Running the daily Odoo-vs-ERP comparison |
+| `CUTOVER_RUNBOOK.md` | OPS-040 … OPS-042 | Rehearsing and executing the cutover |
+| `ROLLBACK.md` | OPS-060, OPS-061, OPS-070, OPS-071 | Before cutover (agree triggers); during cutover (execute) |
+
+## Logs
+
+| Log | Purpose |
 |---|---|
-| `source_key` | The Odoo value being mapped (GL code, journal code, product code, partner id, ...). Never edited. |
-| `source_label` | Human-readable name from Odoo, filled by `map stub`. For review only. |
-| `source_context` | Extra context from Odoo (account type, tax scope, balance) to make review possible without opening Odoo. |
-| `target_key` | The Tryton value. Required when `status=approved`. |
-| `target_label` | Human-readable name of the target. Optional. |
-| `status` | `pending` (default, blocks loads), `approved`, or `excluded`. |
-| `reviewer` | Who approved it. **Required** for `accounts`, `journals`, `taxes`. |
-| `reviewed_on` | Date of approval, `YYYY-MM-DD`. |
-| `notes` | Required when `status=excluded`. Say why. |
+| `docs/ops/restore-drill-log.md` | Evidence that backups restore |
+| `docs/ops/parallel-run-log.md` | Evidence that the ERP agrees with Odoo |
+| `docs/ops/key-custody.md` | Who can decrypt the backups |
 
-## Rules enforced by `capnut-migrate map check`
+## Reading order before cutover
 
-* No row may stay `pending`.
-* `approved` requires a non-empty `target_key`.
-* Accounting tables (`accounts`, `journals`, `taxes`) require a `reviewer`.
-* Two source accounts or journals mapping to the same target is flagged —
-  collapsing accounts is allowed but must be a deliberate, noted decision.
-* `excluded` requires a note.
+1. `docs/specs/14_PRODUCTION_CUTOVER.md` — scope and open questions
+2. `BACKUP_RESTORE.md` — recovery must work before anything else matters
+3. `MONITORING.md` — must be live for the whole parallel run
+4. `PARALLEL_RUN.md` — produces the evidence for approval
+5. `ROLLBACK.md` — triggers agreed **before** the window opens
+6. `CUTOVER_RUNBOOK.md` — rehearsed, then executed
 
-## Workflow
+## Status
 
-```
-capnut-migrate map stub     # adds pending rows for every new source value
-                            # never overwrites a row you have already reviewed
-capnut-migrate map check    # exits non-zero while anything is unresolved
-```
-
-`taxes` maps to whichever tax provider is chosen. `03_ACCOUNTING.md` lists the
-provider and tax configuration as open questions — until they are answered,
-leave tax rows `pending` rather than guessing.
+All documents are DRAFT. They resolve to FINAL when the open questions in
+`14_PRODUCTION_CUTOVER.md` are answered and the rehearsal has corrected the
+measured durations.
