@@ -1,4 +1,0 @@
-# Runtime. Tryton is pinned to the 8.0 series: minor upgrades only.
-# The [postgresql] extra pulls psycopg 3 and psycopg_pool, which the
-# Tryton 8.0 PostgreSQL backend requires.
-trytond[postgresql]>=8.0,<8.1
