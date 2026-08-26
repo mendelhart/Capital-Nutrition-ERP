@@ -1,0 +1,22 @@
+[project]
+name = "capital-nutrition-erp"
+version = "0.1.0"
+description = "Capital Nutrition ERP — Tryton 8.0.x / PostgreSQL 16"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 79
+target-version = "py311"
+exclude = [".venv", "modules/*/locale"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["trytond"]
+
+[tool.pytest.ini_options]
+testpaths = ["modules", "tests"]
+python_files = ["test_*.py"]
+addopts = "-ra"
