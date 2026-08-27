@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="//page[@id='general']/separator[@name='description']" position="before">
+        <label name="external_line_id"/>
+        <field name="external_line_id"/>
+    </xpath>
+</data>
