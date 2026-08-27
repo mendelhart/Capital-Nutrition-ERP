@@ -1,0 +1,54 @@
+# Copy to migration/config/migration.toml and fill in.
+# migration.toml is gitignored — credentials stay with the operator (spec: Extraction).
+# Every value may also be supplied by environment variable, which wins over the file:
+#   CAPNUT_SOURCE_DSN, CAPNUT_TARGET_DSN, CAPNUT_ODOO_URL,
+#   CAPNUT_ODOO_DB, CAPNUT_ODOO_USER, CAPNUT_ODOO_PASSWORD
+
+[run]
+# Free-text label for this rehearsal, e.g. "rehearsal-1", "rehearsal-2", "cutover".
+label = "rehearsal-1"
+# Everything the toolkit writes goes under here (gitignored).
+work_dir = "var"
+# Cutover date. Open AR/AP/PO and opening balances are taken as of end of the day before.
+cutover_date = "2026-01-01"
+# Functional currency. Multi-currency source rows are reported, never silently converted.
+currency = "USD"
+
+[source]
+# One of: odoo_sql | odoo_rpc | csv
+# odoo_sql  — read-only SQL against a restored pg_dump snapshot (recommended)
+# odoo_rpc  — read-only XML-RPC against a live Odoo (adapter stubbed)
+# csv       — hand-exported CSVs in source.csv_dir (adapter stubbed)
+adapter = "odoo_sql"
+system = "odoo"
+
+# --- odoo_sql ---
+# Point this at a RESTORED SNAPSHOT, not production.
+dsn = "postgresql://readonly@localhost:5432/odoo_snapshot"
+# Odoo company to migrate (res_company.id). Required when the DB is multi-company.
+company_id = 1
+
+# --- odoo_rpc (unused unless adapter = "odoo_rpc") ---
+url = "https://odoo.example.com"
+db = "odoo"
+user = ""
+password = ""
+
+# --- csv (unused unless adapter = "csv") ---
+csv_dir = "var/source_csv"
+
+[target]
+# Tryton 8.0.x / PostgreSQL 16 target.
+dsn = "postgresql://tryton@localhost:5432/capnut"
+# One of: jsonl | tryton
+# jsonl  — writes load documents to disk; safe, fully idempotent, no target needed
+# tryton — writes into Tryton (adapter stubbed until the Tryton modules exist)
+adapter = "jsonl"
+
+[reconcile]
+# Absolute money tolerance per check, in functional currency. 0 means exact.
+tolerance = "0.00"
+# Counts (orders, invoices) must always match exactly.
+count_tolerance = 0
+# Rows of variance detail to print per failing check.
+detail_rows = 25
