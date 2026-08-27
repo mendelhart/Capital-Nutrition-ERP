@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!-- This file is part of the Capital Nutrition ERP. -->
+<tryton>
+    <data>
+        <menuitem
+            name="Capital Nutrition"
+            parent="ir.menu_administration"
+            sequence="80"
+            id="menu_capital_nutrition"/>
+        <record model="ir.ui.menu-res.group" id="menu_capital_nutrition_group_admin">
+            <field name="menu" ref="menu_capital_nutrition"/>
+            <field name="group" ref="res.group_admin"/>
+        </record>
+
+        <record model="ir.ui.view" id="external_event_view_list">
+            <field name="model">capital_nutrition.external.event</field>
+            <field name="type">tree</field>
+            <field name="name">external_event_list</field>
+        </record>
+        <record model="ir.ui.view" id="external_event_view_form">
+            <field name="model">capital_nutrition.external.event</field>
+            <field name="type">form</field>
+            <field name="name">external_event_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_external_event_form">
+            <field name="name">External Events</field>
+            <field name="res_model">capital_nutrition.external.event</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_external_event_form_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="external_event_view_list"/>
+            <field name="act_window" ref="act_external_event_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_external_event_form_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="external_event_view_form"/>
+            <field name="act_window" ref="act_external_event_form"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_external_event_domain_pending">
+            <field name="name">Pending</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain" eval="[('state', 'in', ['received', 'failed'])]" pyson="1"/>
+            <field name="act_window" ref="act_external_event_form"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_external_event_domain_failed">
+            <field name="name">Failed</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain" eval="[('state', '=', 'failed')]" pyson="1"/>
+            <field name="act_window" ref="act_external_event_form"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_external_event_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="9999"/>
+            <field name="domain" eval="[]" pyson="1"/>
+            <field name="act_window" ref="act_external_event_form"/>
+        </record>
+
+        <menuitem
+            parent="menu_capital_nutrition"
+            action="act_external_event_form"
+            sequence="10"
+            id="menu_external_event_form"/>
+
+        <record model="ir.model.access" id="access_external_event">
+            <field name="model">capital_nutrition.external.event</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_external_event_admin">
+            <field name="model">capital_nutrition.external.event</field>
+            <field name="group" ref="res.group_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+    </data>
+</tryton>
