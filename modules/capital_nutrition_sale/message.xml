@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- This file is part of the Capital Nutrition ERP. -->
+<tryton>
+    <data grouped="1">
+        <record model="ir.message" id="msg_sale_external_line_on_internal_channel">
+            <field name="text">Sale "%(sale)s" is on channel "%(channel)s", which does not originate externally, so its lines cannot carry external line identifiers.</field>
+        </record>
+    </data>
+</tryton>
