@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!-- This file is part of the Capital Nutrition ERP. -->
+<form>
+    <label name="source"/>
+    <field name="source"/>
+    <label name="event_type"/>
+    <field name="event_type"/>
+
+    <label name="external_id"/>
+    <field name="external_id"/>
+    <label name="state"/>
+    <field name="state"/>
+
+    <label name="received_at"/>
+    <field name="received_at"/>
+    <label name="processed_at"/>
+    <field name="processed_at"/>
+
+    <label name="attempts"/>
+    <field name="attempts"/>
+    <label name="origin"/>
+    <field name="origin"/>
+
+    <label name="payload_digest"/>
+    <field name="payload_digest" colspan="3"/>
+
+    <separator name="error_message" colspan="4"/>
+    <field name="error_message" colspan="4"/>
+</form>
